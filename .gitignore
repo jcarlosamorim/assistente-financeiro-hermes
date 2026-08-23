@@ -1,0 +1,12 @@
+.env
+.env.*
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+__pycache__/
+*.pyc
+.DS_Store
+relatorios-financeiros/
+arquivos-reais/

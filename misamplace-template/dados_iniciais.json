@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "competencia": "AAAA-MM",
+    "atualizado_em": "AAAA-MM-DD",
+    "moeda": "BRL",
+    "estado": "misamplace_template"
+  },
+  "pessoa": {
+    "nome": "",
+    "separacao_pf_pj": true,
+    "preferencias": {
+      "horario_cobranca_diaria": "20:00",
+      "relatorio_semanal": "domingo"
+    }
+  },
+  "contas": {
+    "pf": [],
+    "pj": [],
+    "total_liquido": 0
+  },
+  "cartoes": [],
+  "emprestimos": [],
+  "receitas": [],
+  "despesas_recorrentes": [],
+  "gastos": [],
+  "lacunas_abertas": [],
+  "acoes": {
+    "pendentes": []
+  }
+}
