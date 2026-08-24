@@ -1,6 +1,6 @@
 {
   "name": "assistente-financeiro-hermes",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "repository": "https://github.com/jcarlosamorim/assistente-financeiro-hermes",
   "raw_base": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main",
   "student_prompt": "Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes",

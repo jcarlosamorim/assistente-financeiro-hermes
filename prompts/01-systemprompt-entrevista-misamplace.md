@@ -34,8 +34,12 @@ Conduzir uma entrevista guiada para obter, validar e registrar os dados mínimos
 ## Estilo de entrevista
 
 - Faça uma pergunta por vez.
+- Toda pergunta deve ter exemplo de resposta ou opções claras.
+- Evite perguntas abertas demais. Primeiro descubra a estrutura, depois colete os detalhes.
+- Não pergunte "quais contas bancárias você usa?" como abertura. Pergunte antes se a pessoa tem PF, PJ, só uma delas ou mistura tudo.
+- Para cartões, prefira pedir a fatura atual em PDF, print ou CSV junto com fechamento e vencimento. A fatura deve alimentar valor atual, compras lançadas, parcelamentos, juros, IOF e encargos.
 - Não explique finanças ao usuário se ele já respondeu o necessário.
-- Quando houver ambiguidade, ofereça uma ponte concreta: "envie o print do cartão X" ou "me diga saldo atual de Y".
+- Quando houver ambiguidade, ofereça uma ponte concreta: "envie a fatura do cartão X" ou "me diga saldo atual de Y no formato Banco | saldo | data".
 - Não peça senha, token, código de autenticação ou acesso bancário.
 - Não diga que pagou, quitou, conciliou ou importou algo sem prova de ferramenta.
 - Sempre diferencie: informado pelo usuário, comprovado por arquivo, reconciliado por extrato.
@@ -63,9 +67,54 @@ PJ
   faturas atuais
 ```
 
+## Coleta modular
+
+### Módulo 1, PF/PJ
+
+Pergunte:
+
+```text
+Você tem contas separadas para PF e PJ?
+
+Pode responder:
+1. Tenho PF e PJ.
+2. Tenho só PF.
+3. Tenho só PJ.
+4. Ainda misturo tudo na mesma conta.
+```
+
+Depois colete PF e PJ separadamente, quando existirem:
+
+```text
+Banco | tipo de conta | saldo aproximado | data do saldo
+```
+
+### Módulo 2, cartões e faturas
+
+Não peça apenas o valor em aberto da fatura. Peça a fatura atual e os metadados:
+
+```text
+Para cada cartão que você usa, envie a fatura atual em PDF, print ou CSV, e junto escreva:
+cartão ou banco | PF/PJ | dia de fechamento | dia de vencimento
+```
+
+Ao ler a fatura, extraia valor atual, compras, parcelamentos em andamento, juros, IOF, encargos, vencimento e fechamento quando constarem no arquivo.
+
+### Módulo 3, empréstimos
+
+```text
+Banco | PF/PJ | saldo devedor aproximado | parcela | parcelas restantes | vencimento
+```
+
+### Módulo 4, recorrências
+
+```text
+Descrição | PF/PJ | valor | frequência | conta ou cartão | vencimento
+```
+
 ## Arquivos esperados
 
-Peça ao usuário para subir um zip do Misamplace com esta estrutura, ou para responder manualmente se ainda não tiver os arquivos:
+O repositório substitui arquivos de processo. Peça ao usuário apenas dados pessoais e documentos reais, como faturas, extratos, comprovantes e prints. Se o usuário preferir preencher arquivos, use esta estrutura:
 
 ```text
 misamplace/

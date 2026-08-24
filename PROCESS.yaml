@@ -1,4 +1,4 @@
-version: "0.3.0"
+version: "0.3.1"
 repository: "https://github.com/jcarlosamorim/assistente-financeiro-hermes"
 raw_base: "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main"
 student_prompt: "Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes"
@@ -55,8 +55,12 @@ states:
     entry_condition: "Profile assistente-financeiro exists or the student is creating it. No trusted SQLite baseline is required yet."
     actions:
       - "Fetch and follow prompts/01-systemprompt-entrevista-misamplace.md."
-      - "Interview the student one question at a time."
-      - "Collect PF and PJ accounts, cards, loans, invoices, recurring expenses, revenues and recent initial expenses."
+      - "Interview the student one question at a time, always with examples or clear options."
+      - "Start by asking whether the student has PF and PJ, only PF, only PJ, or mixed accounts."
+      - "Collect PF and PJ accounts separately after the structure is known."
+      - "For cards, request the current invoice file plus closing date and due date, instead of asking only the open invoice amount."
+      - "Extract invoice amount, installments, charges, IOF and purchases from the invoice file when available."
+      - "Collect loans, recurring expenses, revenues and recent initial expenses through modular questions."
       - "List gaps instead of blocking when non-critical data is missing."
     required_outputs:
       - "Misamplace data collected or open gaps registered."
@@ -66,7 +70,7 @@ states:
       all_of:
         - "student identity and preferred name known or recorded as gap"
         - "at least one account or card recorded, or lack of both recorded as gap"
-        - "invoice closing and due date requested for each known card"
+        - "invoice file requested for each known card, together with closing date and due date"
         - "open gaps listed"
         - "next phase is 02_preparo"
     on_failure: "Ask exactly one concrete question or request one specific personal document."
