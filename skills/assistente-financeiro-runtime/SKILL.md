@@ -64,7 +64,9 @@ Use:
 python scripts/generate_weekly_html.py
 ```
 
-Critério: o script retorna JSON com `ok`, `output`, `snapshot_id` e `sha256`.
+O gerador deve aceitar o campo canônico `fatura_atual` em cada cartão. Para compatibilidade com instalações antigas, ele também tolera chaves legadas como `fatura_setembro` e `fatura_agosto`. Quando a fatura não tiver total explícito, o script calcula o total a partir de `lancamentos`, `itens` ou `compras`.
+
+Critério: o script retorna JSON com `ok`, `output`, `snapshot_id` e `sha256`, e o HTML lista cartões com totais lidos ou calculados.
 
 ## Cobrança diária
 
