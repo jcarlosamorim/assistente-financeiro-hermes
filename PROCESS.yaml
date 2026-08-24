@@ -1,4 +1,4 @@
-version: "0.3.1"
+version: "0.3.2"
 repository: "https://github.com/jcarlosamorim/assistente-financeiro-hermes"
 raw_base: "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main"
 student_prompt: "Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes"
@@ -132,7 +132,7 @@ states:
     entry_condition: "Runtime skill works and SQLite verify is ok."
     actions:
       - "Fetch and follow prompts/05-prompt-cron-html-e-cobranca.md."
-      - "Create weekly HTML report cron."
+      - "Create weekly HTML report cron using scripts/generate_weekly_html.py, preserving the original dark dashboard format and using only the student's local SQLite data."
       - "Create daily 20h expense check-in cron."
       - "List crons after creating them."
       - "Run safe manual tests when available."

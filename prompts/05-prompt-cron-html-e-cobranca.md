@@ -36,7 +36,7 @@ Schedule sugerido:
 Prompt do cron:
 
 ```text
-Use a skill assistente-financeiro-runtime. Verifique o SQLite com `verify`. Gere um HTML semanal a partir do estado atual, sem expor dados sensíveis além do necessário. O relatório deve conter: resumo PF/PJ, saldo líquido, faturas abertas, gastos da semana, recorrências próximas, lacunas abertas e ações recomendadas. Salve o HTML em `~/relatorios-financeiros/relatorio-financeiro-AAAA-MM-DD.html`. Entregue a mensagem com caminho do arquivo, snapshot, hash e três próximas ações físicas. Se a verificação falhar, não gere relatório e informe o erro.
+Use a skill assistente-financeiro-runtime. Verifique o SQLite com `verify`. Gere o HTML semanal usando `scripts/generate_weekly_html.py`, que deve produzir um painel visual em dark mode no mesmo padrão do painel de cartões do processo original: cards de faturas no topo, tabelas detalhadas por cartão, seção de contas, gastos fixos mensais, lacunas abertas, próximas ações físicas e rodapé com snapshot, hash, competência e data de atualização. O relatório deve usar somente os dados do SQLite do aluno instalado, sem embutir dados de exemplo ou dados de José. Salve o HTML em `~/relatorios-financeiros/relatorio-financeiro-AAAA-MM-DD.html`. Entregue a mensagem com caminho do arquivo, snapshot, hash e três próximas ações físicas. Se a verificação falhar, não gere relatório e informe o erro.
 ```
 
 ## Cron 2: cobrança diária de gastos
