@@ -1,6 +1,6 @@
 {
   "name": "assistente-financeiro-hermes",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": "https://github.com/jcarlosamorim/assistente-financeiro-hermes",
   "raw_base": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main",
   "student_prompt": "Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes",
@@ -8,6 +8,12 @@
     "process_files": "never_ask_student_to_attach_files_that_exist_in_this_repository",
     "student_data": "ask_only_for_personal_financial_data_not_present_in_public_repo",
     "fallback": "if_a_repo_file_cannot_be_fetched_ask_for_that_single_file_content_only"
+  },
+  "state_control": {
+    "machine": "PROCESS.yaml",
+    "checkpoint_schema": "CHECKPOINT_SCHEMA.json",
+    "checkpoint_file": "finance_assistant_progress.json",
+    "rule": "read checkpoint before every action and update after every state change"
   },
   "bootstrap_order": [
     {
@@ -17,54 +23,69 @@
       "purpose": "Rules for following the process from the repository URL without attachments."
     },
     {
+      "id": "manifest",
+      "path": "PROCESS_MANIFEST.json",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/PROCESS_MANIFEST.json",
+      "purpose": "Index of files the agent must fetch from the repository."
+    },
+    {
+      "id": "process_yaml",
+      "path": "PROCESS.yaml",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/PROCESS.yaml",
+      "purpose": "State machine, gates and resume rules."
+    },
+    {
+      "id": "checkpoint_schema",
+      "path": "CHECKPOINT_SCHEMA.json",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/CHECKPOINT_SCHEMA.json",
+      "purpose": "Schema for local progress checkpoint."
+    },
+    {
       "id": "start_here",
       "path": "START_HERE.md",
       "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/START_HERE.md",
-      "purpose": "Main process overview and phase order."
+      "purpose": "Human-readable process overview."
     }
   ],
   "phase_files": [
     {
       "phase": "01_misamplace",
-      "path": "prompts/01-systemprompt-entrevista-misamplace.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/prompts/01-systemprompt-entrevista-misamplace.md",
+      "path": "agent/PHASE_01_MISAMPLACE.md",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/agent/PHASE_01_MISAMPLACE.md",
+      "supporting_prompt": "prompts/01-systemprompt-entrevista-misamplace.md",
       "gate": "Misamplace collected or open gaps registered."
     },
     {
       "phase": "02_preparo",
-      "path": "skills/assistente-financeiro-meta/SKILL.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/skills/assistente-financeiro-meta/SKILL.md",
+      "path": "agent/PHASE_02_PREPARO.md",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/agent/PHASE_02_PREPARO.md",
+      "supporting_skill": "skills/assistente-financeiro-meta/SKILL.md",
       "gate": "SQLite created, verify ok, snapshot and hash reported, SOUL.md and USER.md written."
     },
     {
       "phase": "03_operacao",
-      "path": "skills/assistente-financeiro-runtime/SKILL.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/skills/assistente-financeiro-runtime/SKILL.md",
+      "path": "agent/PHASE_03_OPERACAO.md",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/agent/PHASE_03_OPERACAO.md",
+      "supporting_skill": "skills/assistente-financeiro-runtime/SKILL.md",
       "gate": "Runtime skill can read accounts, cards, invoices, loans and gaps."
     },
     {
       "phase": "04_crons",
-      "path": "prompts/05-prompt-cron-html-e-cobranca.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/prompts/05-prompt-cron-html-e-cobranca.md",
+      "path": "agent/PHASE_04_CRONS.md",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/agent/PHASE_04_CRONS.md",
+      "supporting_prompt": "prompts/05-prompt-cron-html-e-cobranca.md",
       "gate": "Cron IDs listed and SQLite verified."
     },
     {
-      "phase": "05_experimentacao_html",
-      "path": "prompts/06-experimentacao-html-situacao-atual.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/prompts/06-experimentacao-html-situacao-atual.md",
-      "gate": "HTML generated with file path, snapshot, hash and verify status."
-    },
-    {
-      "phase": "05_experimentacao_comprovante",
-      "path": "prompts/07-experimentacao-registrar-comprovante.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/prompts/07-experimentacao-registrar-comprovante.md",
-      "gate": "Receipt expense registered with read-back, recalculated total, snapshot and hash."
-    },
-    {
-      "phase": "05_experimentacao_recomendacao",
-      "path": "prompts/08-experimentacao-recomendacao-proativa.md",
-      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/prompts/08-experimentacao-recomendacao-proativa.md",
-      "gate": "One proactive recommendation grounded in SQLite data with one physical next action."
+      "phase": "05_experimentacao",
+      "path": "agent/PHASE_05_EXPERIMENTACAO.md",
+      "raw_url": "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main/agent/PHASE_05_EXPERIMENTACAO.md",
+      "supporting_prompts": [
+        "prompts/06-experimentacao-html-situacao-atual.md",
+        "prompts/07-experimentacao-registrar-comprovante.md",
+        "prompts/08-experimentacao-recomendacao-proativa.md"
+      ],
+      "gate": "Three experiment tests completed or explicit blocker recorded."
     }
   ],
   "template_files": [
@@ -78,9 +99,14 @@
     "misamplace-template/receitas.csv",
     "misamplace-template/gastos_iniciais.csv"
   ],
+  "skill_files": [
+    "skills/assistente-financeiro-meta/SKILL.md",
+    "skills/assistente-financeiro-runtime/SKILL.md"
+  ],
   "skill_support_files": [
     "skills/assistente-financeiro-meta/scripts/finance_db.py",
     "skills/assistente-financeiro-runtime/scripts/finance_db.py",
-    "skills/assistente-financeiro-runtime/scripts/generate_weekly_html.py"
+    "skills/assistente-financeiro-runtime/scripts/generate_weekly_html.py",
+    "scripts/install_skills.py"
   ]
 }

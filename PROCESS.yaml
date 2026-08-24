@@ -1,0 +1,182 @@
+version: "0.3.0"
+repository: "https://github.com/jcarlosamorim/assistente-financeiro-hermes"
+raw_base: "https://raw.githubusercontent.com/jcarlosamorim/assistente-financeiro-hermes/main"
+student_prompt: "Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes"
+
+principles:
+  repository_replaces_process_attachments: true
+  one_question_at_a_time: true
+  never_ask_for_bank_passwords_or_tokens: true
+  evidence_before_completion: true
+  checkpoint_required: true
+
+required_bootstrap_files:
+  - WEB_BOOTSTRAP.md
+  - PROCESS_MANIFEST.json
+  - PROCESS.yaml
+  - CHECKPOINT_SCHEMA.json
+  - START_HERE.md
+
+checkpoint:
+  path: "finance_assistant_progress.json"
+  read_before_every_action: true
+  update_after_every_state_change: true
+  schema: "CHECKPOINT_SCHEMA.json"
+
+fetch_policy:
+  process_files: "fetch_from_repository"
+  preferred_source: "raw.githubusercontent.com"
+  fallback_order:
+    - "web_fetch_or_web_extract"
+    - "raw_urls_from_PROCESS_MANIFEST_json"
+    - "browser_or_oxylabs_if_needed"
+    - "ask_user_to_paste_only_the_single_failed_file"
+  never_ask_student_to_attach:
+    - "START_HERE.md"
+    - "WEB_BOOTSTRAP.md"
+    - "PROCESS_MANIFEST.json"
+    - "PROCESS.yaml"
+    - "CHECKPOINT_SCHEMA.json"
+    - "agent phase files"
+    - "prompts from this repository"
+    - "skills from this repository"
+    - "scripts from this repository"
+  may_ask_student_for:
+    - "personal bank balances"
+    - "real invoices"
+    - "real receipts"
+    - "real statements"
+    - "screenshots or PDFs containing the student's financial data"
+
+states:
+  - id: "01_misamplace"
+    name: "Misamplace"
+    phase_file: "agent/PHASE_01_MISAMPLACE.md"
+    entry_condition: "Profile assistente-financeiro exists or the student is creating it. No trusted SQLite baseline is required yet."
+    actions:
+      - "Fetch and follow prompts/01-systemprompt-entrevista-misamplace.md."
+      - "Interview the student one question at a time."
+      - "Collect PF and PJ accounts, cards, loans, invoices, recurring expenses, revenues and recent initial expenses."
+      - "List gaps instead of blocking when non-critical data is missing."
+    required_outputs:
+      - "Misamplace data collected or open gaps registered."
+      - "PF and PJ boundaries identified."
+      - "finance_assistant_progress.json updated."
+    exit_gate:
+      all_of:
+        - "student identity and preferred name known or recorded as gap"
+        - "at least one account or card recorded, or lack of both recorded as gap"
+        - "invoice closing and due date requested for each known card"
+        - "open gaps listed"
+        - "next phase is 02_preparo"
+    on_failure: "Ask exactly one concrete question or request one specific personal document."
+
+  - id: "02_preparo"
+    name: "Preparo"
+    phase_file: "agent/PHASE_02_PREPARO.md"
+    entry_condition: "Misamplace data is collected or gaps are explicitly recorded."
+    actions:
+      - "Install or copy skills/assistente-financeiro-meta into the active profile skills directory."
+      - "Use scripts/install_skills.py when file tools are available."
+      - "Create assets/financas.db from the normalized Misamplace document."
+      - "Run finance_db.py verify."
+      - "Write SOUL.md and USER.md for the assistente-financeiro profile."
+    required_outputs:
+      - "SQLite path."
+      - "snapshot_id."
+      - "sha256."
+      - "verify ok."
+      - "SOUL.md path."
+      - "USER.md path."
+      - "open gaps."
+    exit_gate:
+      all_of:
+        - "assets/financas.db exists"
+        - "verify ok"
+        - "snapshot_id recorded in checkpoint"
+        - "sha256 recorded in checkpoint"
+        - "SOUL.md written or explicit blocker recorded"
+        - "USER.md written or explicit blocker recorded"
+        - "next phase is 03_operacao"
+    on_failure: "Do not install runtime or create crons. Report the missing evidence and ask for one next action."
+
+  - id: "03_operacao"
+    name: "Operação"
+    phase_file: "agent/PHASE_03_OPERACAO.md"
+    entry_condition: "SQLite verify is ok and meta preparation has completed."
+    actions:
+      - "Install or copy skills/assistente-financeiro-runtime into the active profile skills directory."
+      - "Run verify."
+      - "Read accounts, cards, invoices, loans and gaps."
+      - "Run one controlled registration test only with explicit student authorization."
+    required_outputs:
+      - "runtime skill available"
+      - "verify ok"
+      - "read-back of core sections"
+      - "test registration evidence or explicit decision to skip test"
+    exit_gate:
+      all_of:
+        - "runtime skill installed or available"
+        - "SQLite verify ok after runtime installation"
+        - "core financial sections read successfully"
+        - "next phase is 04_crons"
+    on_failure: "Do not create crons. Fix runtime access or report the blocker."
+
+  - id: "04_crons"
+    name: "Crons"
+    phase_file: "agent/PHASE_04_CRONS.md"
+    entry_condition: "Runtime skill works and SQLite verify is ok."
+    actions:
+      - "Fetch and follow prompts/05-prompt-cron-html-e-cobranca.md."
+      - "Create weekly HTML report cron."
+      - "Create daily 20h expense check-in cron."
+      - "List crons after creating them."
+      - "Run safe manual tests when available."
+    required_outputs:
+      - "weekly_report_cron_id"
+      - "daily_checkin_cron_id"
+      - "cron list read-back"
+      - "SQLite verify ok"
+    exit_gate:
+      all_of:
+        - "weekly_report_cron_id recorded or explicit scheduler blocker recorded"
+        - "daily_checkin_cron_id recorded or explicit scheduler blocker recorded"
+        - "cron state read back"
+        - "next phase is 05_experimentacao"
+    on_failure: "Do not claim automation is ready. Report which cron failed and why."
+
+  - id: "05_experimentacao"
+    name: "Experimentação"
+    phase_file: "agent/PHASE_05_EXPERIMENTACAO.md"
+    entry_condition: "Runtime is working and crons are created or scheduler blocker is explicit."
+    tests:
+      - id: "html_situacao_atual"
+        prompt_file: "prompts/06-experimentacao-html-situacao-atual.md"
+        success_gate: "HTML exists, verify ok, snapshot and hash reported."
+      - id: "registrar_comprovante"
+        prompt_file: "prompts/07-experimentacao-registrar-comprovante.md"
+        success_gate: "Receipt expense registered with read-back, recalculated total, snapshot and hash."
+      - id: "recomendacao_proativa"
+        prompt_file: "prompts/08-experimentacao-recomendacao-proativa.md"
+        success_gate: "One recommendation grounded in SQLite data and one physical next action."
+    required_outputs:
+      - "html test result"
+      - "receipt registration test result"
+      - "proactive recommendation result"
+      - "final checkpoint"
+    exit_gate:
+      all_of:
+        - "three tests completed or explicit blocker recorded for failed test"
+        - "final status summary delivered"
+    on_failure: "Stop at the failed test, record blocker, ask one next action."
+
+resume_rules:
+  on_user_says_continue_or_siga:
+    - "Read finance_assistant_progress.json if it exists."
+    - "If absent, create it from CHECKPOINT_SCHEMA.json and PROCESS.yaml."
+    - "Identify current_state."
+    - "Resume at the first unmet exit_gate item."
+  on_user_says_where_are_we:
+    - "Report current phase, completed gates, pending gate and one next action."
+  on_context_loss:
+    - "Fetch PROCESS.yaml and read checkpoint before taking action."

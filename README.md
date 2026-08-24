@@ -10,7 +10,9 @@ No seu Hermes, envie:
 Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes
 ```
 
-O repositório substitui os anexos do processo. O Hermes deve ler `WEB_BOOTSTRAP.md`, `PROCESS_MANIFEST.json` e `START_HERE.md` diretamente do GitHub. Você só precisa enviar seus dados pessoais financeiros quando ele pedir, como saldos, faturas reais, comprovantes e prints.
+O repositório substitui os anexos do processo. O Hermes deve ler `WEB_BOOTSTRAP.md`, `PROCESS_MANIFEST.json`, `PROCESS.yaml`, `CHECKPOINT_SCHEMA.json` e `START_HERE.md` diretamente do GitHub. Você só precisa enviar seus dados pessoais financeiros quando ele pedir, como saldos, faturas reais, comprovantes e prints.
+
+O agente deve manter um checkpoint local chamado `finance_assistant_progress.json` e avançar fase por fase pelos gates definidos em `PROCESS.yaml`.
 
 Depois responda às perguntas do assistente.
 
@@ -24,6 +26,16 @@ Troque `SEU_USUARIO` pelo usuário ou organização real do GitHub depois de pub
 START_HERE.md
 WEB_BOOTSTRAP.md
 PROCESS_MANIFEST.json
+PROCESS.yaml
+CHECKPOINT_SCHEMA.json
+agent/
+  PHASE_01_MISAMPLACE.md
+  PHASE_02_PREPARO.md
+  PHASE_03_OPERACAO.md
+  PHASE_04_CRONS.md
+  PHASE_05_EXPERIMENTACAO.md
+scripts/
+  install_skills.py
 prompts/
   01-systemprompt-entrevista-misamplace.md
   05-prompt-cron-html-e-cobranca.md

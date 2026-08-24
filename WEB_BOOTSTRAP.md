@@ -13,11 +13,14 @@ Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financei
 Ao receber a URL do repositório:
 
 1. Abra a URL do GitHub.
-2. Leia `START_HERE.md`.
-3. Leia `WEB_BOOTSTRAP.md`.
-4. Leia `PROCESS_MANIFEST.json`.
-5. Busque os arquivos necessários pelo próprio repositório, preferencialmente pelas URLs raw.
-6. Não peça para o aluno anexar `START_HERE.md`, prompts, templates, skills ou scripts que já estão neste repositório.
+2. Leia `WEB_BOOTSTRAP.md`.
+3. Leia `PROCESS_MANIFEST.json`.
+4. Leia `PROCESS.yaml`.
+5. Leia `CHECKPOINT_SCHEMA.json`.
+6. Leia `START_HERE.md`.
+7. Crie ou atualize `finance_assistant_progress.json`.
+8. Busque os arquivos necessários pelo próprio repositório, preferencialmente pelas URLs raw.
+9. Não peça para o aluno anexar `START_HERE.md`, prompts, templates, skills ou scripts que já estão neste repositório.
 
 ## O que ainda pode ser pedido ao aluno
 
@@ -49,7 +52,8 @@ Nunca peça para o aluno anexar todos os arquivos do processo se a falha foi em 
 Antes de começar a entrevista, o agente deve conseguir responder internamente:
 
 - Qual é a fase atual?
-- Qual arquivo governa essa fase?
+- Qual arquivo `agent/PHASE_*.md` governa essa fase?
 - Qual é o próximo gate?
+- Onde está `finance_assistant_progress.json`?
 - Quais arquivos do processo já foram lidos do repositório?
 - Quais dados pessoais ainda dependem do aluno?

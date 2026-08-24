@@ -4,13 +4,17 @@ Se você é o Hermes do aluno e recebeu a mensagem "Vamos seguir este processo <
 
 ## Regra zero, o repositório substitui os anexos do processo
 
-Não peça para o aluno anexar arquivos que já estão neste repositório. Antes de começar a entrevista, leia:
+Não peça para o aluno anexar arquivos que já estão neste repositório. Antes de começar a entrevista, leia nesta ordem:
 
 1. `WEB_BOOTSTRAP.md`
 2. `PROCESS_MANIFEST.json`
-3. este `START_HERE.md`
+3. `PROCESS.yaml`
+4. `CHECKPOINT_SCHEMA.json`
+5. este `START_HERE.md`
 
 Use o `PROCESS_MANIFEST.json` para buscar os prompts, templates, skills e scripts pelo próprio GitHub, preferencialmente via URLs raw. Só peça anexos quando forem dados pessoais do aluno, como faturas reais, comprovantes reais, extratos, prints ou PDFs financeiros dele.
+
+Crie ou atualize um checkpoint local chamado `finance_assistant_progress.json`. Antes de cada ação, leia esse checkpoint. Depois de cada mudança de estado, atualize esse checkpoint. Nunca avance de fase sem cumprir o `exit_gate` de `PROCESS.yaml`.
 
 ## Objetivo
 
@@ -23,6 +27,18 @@ Montar um assistente financeiro pessoal em um profile Hermes chamado `assistente
 3. **Experimentação**, testar registro, relatório e crons.
 
 ## Como proceder
+
+### Protocolo obrigatório
+
+Siga `PROCESS.yaml` como máquina de estados. Cada fase tem entrada, ações, saídas e gate. Se o usuário disser `siga`, `continue` ou `onde estamos?`, leia `finance_assistant_progress.json` e retome do primeiro gate pendente.
+
+Os detalhes operacionais ficam nos arquivos em `agent/`:
+
+- `agent/PHASE_01_MISAMPLACE.md`
+- `agent/PHASE_02_PREPARO.md`
+- `agent/PHASE_03_OPERACAO.md`
+- `agent/PHASE_04_CRONS.md`
+- `agent/PHASE_05_EXPERIMENTACAO.md`
 
 ### Fase 1, Misamplace
 

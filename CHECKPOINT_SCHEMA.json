@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Finance Assistant Progress Checkpoint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "process_version",
+    "repository",
+    "current_state",
+    "completed_states",
+    "pending_gates",
+    "evidence",
+    "open_gaps",
+    "last_updated_at"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0.0"},
+    "process_version": {"type": "string"},
+    "repository": {"type": "string", "format": "uri"},
+    "current_state": {
+      "type": "string",
+      "enum": [
+        "01_misamplace",
+        "02_preparo",
+        "03_operacao",
+        "04_crons",
+        "05_experimentacao",
+        "completed",
+        "blocked"
+      ]
+    },
+    "completed_states": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["01_misamplace", "02_preparo", "03_operacao", "04_crons", "05_experimentacao"]
+      },
+      "uniqueItems": true
+    },
+    "pending_gates": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "loaded_repo_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "source", "loaded_at"],
+        "properties": {
+          "path": {"type": "string"},
+          "source": {"type": "string"},
+          "loaded_at": {"type": "string"},
+          "sha256": {"type": ["string", "null"]}
+        }
+      },
+      "default": []
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sqlite_path": {"type": ["string", "null"]},
+        "snapshot_id": {"type": ["integer", "null"]},
+        "sha256": {"type": ["string", "null"]},
+        "verify_ok": {"type": "boolean", "default": false},
+        "soul_path": {"type": ["string", "null"]},
+        "user_path": {"type": ["string", "null"]},
+        "weekly_report_cron_id": {"type": ["string", "null"]},
+        "daily_checkin_cron_id": {"type": ["string", "null"]},
+        "html_report_path": {"type": ["string", "null"]},
+        "last_registered_expense_ref": {"type": ["string", "null"]}
+      },
+      "required": ["verify_ok"]
+    },
+    "open_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "state", "question", "blocks_exit_gate"],
+        "properties": {
+          "id": {"type": "string"},
+          "state": {"type": "string"},
+          "question": {"type": "string"},
+          "blocks_exit_gate": {"type": "boolean"},
+          "status": {"type": "string", "enum": ["open", "answered", "deferred"], "default": "open"}
+        }
+      }
+    },
+    "blocked": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "is_blocked": {"type": "boolean", "default": false},
+        "reason": {"type": ["string", "null"]},
+        "next_physical_action": {"type": ["string", "null"]}
+      },
+      "default": {"is_blocked": false, "reason": null, "next_physical_action": null}
+    },
+    "experiment_tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "html_situacao_atual": {"$ref": "#/$defs/test_result"},
+        "registrar_comprovante": {"$ref": "#/$defs/test_result"},
+        "recomendacao_proativa": {"$ref": "#/$defs/test_result"}
+      },
+      "default": {}
+    },
+    "last_user_message_summary": {"type": ["string", "null"]},
+    "last_assistant_action_summary": {"type": ["string", "null"]},
+    "last_updated_at": {"type": "string"}
+  },
+  "$defs": {
+    "test_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "enum": ["pending", "passed", "failed", "blocked"]},
+        "evidence": {"type": ["string", "null"]},
+        "snapshot_id": {"type": ["integer", "null"]},
+        "sha256": {"type": ["string", "null"]},
+        "next_action": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "examples": [
+    {
+      "schema_version": "1.0.0",
+      "process_version": "0.3.0",
+      "repository": "https://github.com/jcarlosamorim/assistente-financeiro-hermes",
+      "current_state": "01_misamplace",
+      "completed_states": [],
+      "pending_gates": ["coletar cartões", "listar lacunas"],
+      "loaded_repo_files": [],
+      "evidence": {"verify_ok": false},
+      "open_gaps": [],
+      "blocked": {"is_blocked": false, "reason": null, "next_physical_action": null},
+      "experiment_tests": {
+        "html_situacao_atual": {"status": "pending"},
+        "registrar_comprovante": {"status": "pending"},
+        "recomendacao_proativa": {"status": "pending"}
+      },
+      "last_user_message_summary": null,
+      "last_assistant_action_summary": null,
+      "last_updated_at": "AAAA-MM-DDTHH:MM:SSZ"
+    }
+  ]
+}
