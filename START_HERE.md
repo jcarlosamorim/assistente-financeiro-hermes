@@ -65,7 +65,17 @@ Crie dois crons:
 - relatório HTML semanal aos domingos;
 - cobrança diária às 20h perguntando se houve gastos no dia.
 
-Critério final: crons listados, IDs informados, teste manual executado e SQLite íntegro.
+Critério de passagem: crons listados, IDs informados e SQLite íntegro.
+
+### Fase 5, Experimentação
+
+Execute somente três testes, nesta ordem:
+
+1. Leia `prompts/06-experimentacao-html-situacao-atual.md` e peça um HTML da situação financeira atual.
+2. Leia `prompts/07-experimentacao-registrar-comprovante.md` e registre um gasto a partir de comprovante enviado pelo aluno.
+3. Leia `prompts/08-experimentacao-recomendacao-proativa.md` e responda à pergunta: "Há algo que você me indique fazer que provavelmente eu não saiba?"
+
+Critério final: cada teste precisa informar evidência, snapshot, hash quando houver SQLite, e uma próxima ação física. Se algum teste falhar, não avance sem declarar o bloqueio.
 
 ## Regras de evidência
 

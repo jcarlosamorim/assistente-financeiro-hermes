@@ -23,6 +23,9 @@ START_HERE.md
 prompts/
   01-systemprompt-entrevista-misamplace.md
   05-prompt-cron-html-e-cobranca.md
+  06-experimentacao-html-situacao-atual.md
+  07-experimentacao-registrar-comprovante.md
+  08-experimentacao-recomendacao-proativa.md
 misamplace-template/
   contas.csv
   cartoes.csv
@@ -44,6 +47,7 @@ skills/
 4. O Hermes lê `START_HERE.md` e conduz o processo.
 5. O aluno fornece dados do Misamplace.
 6. O Hermes instala as skills, cria o SQLite e agenda os crons.
+7. O aluno executa os três prompts de experimentação: HTML atual, registro por comprovante e recomendação proativa.
 
 ## Segurança
 
