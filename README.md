@@ -7,8 +7,10 @@ Material público da aula para montar um assistente financeiro pessoal com Herme
 No seu Hermes, envie:
 
 ```text
-Vamos seguir este processo: https://github.com/SEU_USUARIO/assistente-financeiro-hermes
+Vamos seguir este processo: https://github.com/jcarlosamorim/assistente-financeiro-hermes
 ```
+
+O repositório substitui os anexos do processo. O Hermes deve ler `WEB_BOOTSTRAP.md`, `PROCESS_MANIFEST.json` e `START_HERE.md` diretamente do GitHub. Você só precisa enviar seus dados pessoais financeiros quando ele pedir, como saldos, faturas reais, comprovantes e prints.
 
 Depois responda às perguntas do assistente.
 
@@ -20,6 +22,8 @@ Troque `SEU_USUARIO` pelo usuário ou organização real do GitHub depois de pub
 
 ```text
 START_HERE.md
+WEB_BOOTSTRAP.md
+PROCESS_MANIFEST.json
 prompts/
   01-systemprompt-entrevista-misamplace.md
   05-prompt-cron-html-e-cobranca.md
